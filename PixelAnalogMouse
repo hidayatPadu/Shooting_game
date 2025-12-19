@@ -1,0 +1,48 @@
+using UnityEngine;
+
+public class PixelAnalogMouse : MonoBehaviour
+{
+    public Transform stick;        
+    public float maxRange = 0.5f;  
+
+    Vector3 startPos;
+
+    void Start()
+    {
+        startPos = stick.localPosition;
+    }
+
+    void Update()
+    {
+        // bila mouse down → gerakkan analog
+        if (Input.GetMouseButton(0))
+        {
+            MoveAnalog();
+        }
+        else // bila tidak ditekan → reset
+        {
+            stick.localPosition = startPos;
+        }
+    }
+
+    void MoveAnalog()
+    {
+        // Ambil world position mouse
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        worldPos.z = 0;
+
+        // kira arah dari base analog
+        Vector3 dir = worldPos - transform.position;
+
+        // lock supaya tak lebih radius
+        dir = Vector3.ClampMagnitude(dir, maxRange);
+
+        // gerakkan stick
+        stick.localPosition = dir;
+    }
+
+    public Vector2 GetDirection()
+    {
+        return stick.localPosition / maxRange;
+    }
+}
