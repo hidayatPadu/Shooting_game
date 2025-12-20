@@ -1,35 +1,40 @@
 using UnityEngine;
 
-public class PixelAnalogMouse : MonoBehaviour
+public class CharacterMove : MonoBehaviour
 {
-    public Transform stick;
-    public float maxRange = 0.5f;
+    public float moveSpeed = 3f;
 
-    Vector3 startPos;
+    Animator animationDimainkan;
+    string animationSemasa = "";
 
     void Start()
     {
-        startPos = stick.localPosition;
+        animationDimainkan = GetComponent<Animator>();
     }
 
-    void OnMouseDrag()
+    void Update()
     {
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        worldPos.z = 0;
-
-        Vector3 dir = worldPos - transform.position;
-        dir = Vector3.ClampMagnitude(dir, maxRange);
-
-        stick.localPosition = dir;
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            animasiDimainkan("MoveLeft");
+            transform.position += Vector3.left * moveSpeed * Time.deltaTime;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            animasiDimainkan("MoveRight");
+            transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+        }
+        else
+        {
+            animasiDimainkan("Idle");
+        }
     }
 
-    void OnMouseUp()
+    void animasiDimainkan(string animationDiinginkan)
     {
-        stick.localPosition = startPos;
-    }
+        if (animationSemasa == animationDiinginkan) return;
 
-    public Vector2 GetDirection()
-    {
-        return stick.localPosition / maxRange;
+        animationDimainkan.Play(animationDiinginkan);
+        animationSemasa = animationDiinginkan;
     }
 }
